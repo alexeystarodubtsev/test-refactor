@@ -3,7 +3,7 @@
 ### Please Refactor the code in `/src/App.tsx`.
 
 ### How should it works?
-The list of items should be filled with some random heavily calculated content. On press "Add more" some additional items should be added to the existing list (E.g. + 20 items on every click). 
+The list of items should be filled with some random HEAVILY calculated content. On press "Add more" some additional items should be added to the existing list (E.g. + 20 items on every click). 
 
 ### What you can do?
 

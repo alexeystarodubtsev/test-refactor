@@ -2,52 +2,43 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+interface Element { id: number; title: string; }
 
 function App() {
-    // d - List of items that can be updated with new additional items when the button is pressed
-    var [d, set] = React.useState()
+    // list - List of items that can be updated with new additional items when the button is pressed
+    const [list, setList] = React.useState<Element[]>([]);
 
-    var fill = () => {
+    const getRandomTitle = function () {
+        const result = [];
+        const randomString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < 10; i++) {
+            result.push(randomString.charAt(Math.floor(Math.random() *
+                randomString.length)));
+        }
+        return result.join('');
+    }
+    const fill = () => {
         // The function fills the list for render with some items
-
-        [...Array(20)].forEach((_, index) => {
-            if (!Array.isArray(d)) {
-                // @ts-ignore
-                d = []
-            }
-
-            // @ts-ignore
-            d.push({
-                id: index, title: (function () {
-                    var result = [];
-                    for (var i = 0; i < 10; i++) {
-                        result.push('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.charAt(Math.floor(Math.random() *
-                            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.length)));
-                    }
-                    var string = result.join('');
-                    return string
-                })()
+        const newArray: Element[] = [];
+        Array(20).fill(0).forEach((_, index) => {
+            newArray.push({
+                id: index, title: getRandomTitle()
             })
         })
-        set(d)
+        setList(newArray);
     }
 
-    // Fills the List onmount
-    fill()
+    React.useEffect(() => {
+        // Fills the List onmount
+        fill();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    var render = () => {
+    const render = () => {
         // renders the list of items as components
-
-        if (!Array.isArray(d)) {
-            // @ts-ignore
-            d = []
-        }
-        var result:any = []
-        // @ts-ignore
-        d.forEach(function (i, index) {
-            result.push(<div className={'App-item'}>{'Title is:' + i.title + '!'}</div>)
-        })
-        return result
+        return list.map((element, index) => (
+            <div key={String(index)} className={'App-item'}>{'Title is: ' + element.title + '!'}</div>
+        ));
     }
 
     return (
@@ -56,34 +47,15 @@ function App() {
                 <img src={logo} className="App-logo" alt="logo"/>
             </div>
             <div>
-                <button className={"App-button"} onClick={() => {
-                    // The Function adds new items to the existing list
-
-                    if (!Array.isArray(d)) {
-                        // @ts-ignore
-                        d = []
-                    }
-                    [...Array(20)].forEach((_, index) => {
-                        if (!Array.isArray(d)) {
-                            // @ts-ignore
-                            d = []
-                        }
-                        // @ts-ignore
-                        d.push({
-                            id: index, title: (function () {
-                                var result = [];
-                                for (var i = 0; i < 10; i++) {
-                                    result.push('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.charAt(Math.floor(Math.random() *
-                                        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.length)));
-                                }
-                                var string = result.join('');
-                                return string
-                            })()
-                        })
-                    })
-                    // @ts-ignore
-                    set(d)
-                }}>
+                <button
+                    className={"App-button"}
+                    onClick={() => {
+                        // The Function adds new items to the existing list
+                        setList(prev => [...prev, {
+                            id: prev.length, title: getRandomTitle()
+                        }])
+                    }}
+                >
                     Add More
                 </button>
             </div>

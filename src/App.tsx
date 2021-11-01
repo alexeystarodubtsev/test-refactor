@@ -4,6 +4,7 @@ import './App.css';
 
 interface Element { id: number; title: string; }
 
+const COUNT_PART_ELEMENTS = 20;
 function App() {
     // list - List of items that can be updated with new additional items when the button is pressed
     const [list, setList] = React.useState<Element[]>([]);
@@ -19,13 +20,15 @@ function App() {
     }
     const fill = () => {
         // The function fills the list for render with some items
-        const newArray: Element[] = [];
-        Array(20).fill(0).forEach((_, index) => {
-            newArray.push({
-                id: index, title: getRandomTitle()
+        setList(prevList => {
+            const newArray: Element[] = [...prevList];
+            Array(COUNT_PART_ELEMENTS).fill(0).forEach((_, index) => {
+                newArray.push({
+                    id: index, title: getRandomTitle()
+                })
             })
-        })
-        setList(newArray);
+            return newArray;
+        });
     }
 
     React.useEffect(() => {
@@ -49,12 +52,7 @@ function App() {
             <div>
                 <button
                     className={"App-button"}
-                    onClick={() => {
-                        // The Function adds new items to the existing list
-                        setList(prev => [...prev, {
-                            id: prev.length, title: getRandomTitle()
-                        }])
-                    }}
+                    onClick={fill}
                 >
                     Add More
                 </button>
